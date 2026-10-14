@@ -1,0 +1,306 @@
+DataPulse AI | Production Grade AI Analytics SaaS
+
+Act as a Principal AI Engineer, Senior NestJS Architect, PostgreSQL Security Expert, and Premium SaaS UI/UX Designer.
+
+Build DataPulse AI, a fully functional AI powered Business Intelligence platform that converts natural language questions into secure PostgreSQL queries and interactive business analytics.
+
+1. Existing Project Structure
+
+I have already created and installed both applications:
+
+frontend/: Next.js 16 App Router, TypeScript, and Tailwind CSS.
+
+backend/: NestJS, TypeScript.
+
+Both applications already exist. Do not recreate either application, overwrite their configurations unnecessarily, or initialize new projects.
+
+First inspect the complete project structure, existing dependencies, scripts, and configurations in both folders. Preserve working code and build on top of the existing setup.
+
+Keep the frontend and backend separate:
+
+Frontend: UI, charts, interactions, and API consumption.
+
+Backend: Gemini integration, SQL generation, security validation, database access, and business summaries.
+
+2. Technology Stack
+
+Frontend: Next.js 16, TypeScript, Tailwind CSS, Framer Motion, Lucide icons, Recharts.
+
+Backend: NestJS, TypeScript, Supabase PostgreSQL, Prisma ORM, Gemini 2.5 Flash using @google/genai, @nestjs/config, class-validator, and class-transformer.
+
+Use compatible, supported dependencies and current SDK APIs. Reuse installed packages whenever appropriate. Do not use vector databases, embeddings, Redis, or microservices.
+
+3. Premium UI/UX Is Mandatory
+
+Create an exceptionally beautiful, modern, premium SaaS dashboard. It must feel like a professionally designed commercial analytics product, not a generic AI generated template.
+
+Design requirements:
+
+Sophisticated dark theme with deep navy backgrounds, elegant blue accents, subtle gradients, and excellent contrast.
+
+Premium typography, precise spacing, refined borders, beautiful cards, and strong visual hierarchy.
+
+Smooth Framer Motion animations and meaningful micro interactions.
+
+Fully responsive desktop, tablet, and mobile layouts.
+
+Natural language query workspace with attractive example prompts.
+
+SQL viewer with syntax highlighting and copy functionality.
+
+Interactive data tables, KPI cards, and dynamic charts.
+
+Query execution status, execution time, result count, and security indicators.
+
+Beautiful loading skeletons, empty states, success feedback, and error handling.
+
+Accessible controls, keyboard navigation, and consistent design components.
+
+Use Tailwind CSS for all frontend styling. Do not create plain CSS stylesheets or replace the existing Tailwind setup. Avoid excessive gradients, clutter, generic layouts, and unnecessary animations.
+
+The first screen should immediately communicate that this is a premium AI analytics platform.
+
+4. Supabase Database and Vectorless Retrieval
+
+Connect the backend to Supabase PostgreSQL through Prisma ORM.
+
+Create these related tables:
+
+Users: id, name, email, country, created_at.
+
+Products: id, title, category, price.
+
+Orders: id, user_id, product_id, amount, status, created_at.
+
+Implement primary keys, foreign keys, appropriate indexes, constraints, Prisma migrations, and a seed script containing at least 10 customers, 5 products, and 20 realistic orders.
+
+Ensure the sample data supports meaningful revenue analytics, customer rankings, category comparisons, and monthly trends.
+
+Implement schema understanding and relational context building without embeddings or vector search.
+
+Provide Gemini with relevant table descriptions, column types, relationships, and business rules. Use a lightweight intent router to identify aggregation, filtering, ranking, comparison, and time based questions.
+
+Clearly define revenue calculations and how cancelled or incomplete orders are handled.
+
+5. Secure Text to SQL and SQL Agents
+
+Implement modular NestJS services for:
+
+Query intent detection.
+
+Schema context construction.
+
+SQL generation.
+
+SQL security validation.
+
+Safe query execution.
+
+Result context processing.
+
+AI business summaries.
+
+Example questions:
+
+Show the top five customers by spending.
+
+Compare monthly revenue.
+
+Which product categories generate the most revenue?
+
+Find completed orders from this month.
+
+Which products have the highest number of orders?
+
+Implement this workflow:
+
+User Question → Intent Analysis → Schema Context → SQL Generation → Security Validation → Database Execution → Results → Business Summary.
+
+Mandatory security requirements
+
+SQL security
+
+Use a PostgreSQL compatible parser to validate generated SQL structurally using an AST.
+
+Allow only explicitly approved read only queries.
+
+Reject multiple statements, unauthorized tables or columns, write operations, DDL, dangerous functions, and unsupported query constructs.
+
+Never rely on keyword blocking or the SELECT keyword alone.
+
+Enforce safe row limits, query complexity restrictions, and statement timeouts.
+
+Revalidate every generated query before execution.
+
+Supabase security
+
+Use a dedicated least privilege PostgreSQL role restricted to approved analytics tables.
+
+Never execute AI generated SQL using Supabase service role, database owner, or migration credentials.
+
+Use read only transactions where supported.
+
+Configure runtime and migration database connections appropriately.
+
+Never expose database credentials or Gemini API keys to the frontend.
+
+Prompt injection and AI security
+
+Defend against direct and indirect prompt injection, jailbreaks, malicious instructions, and attempts to override system rules.
+
+Treat user prompts, database records, and model outputs as untrusted input.
+
+Never allow user supplied content or database records to override application security policies.
+
+Prevent unauthorized data access, SQL injection, sensitive information disclosure, and secret exposure.
+
+Never reveal hidden system prompts, internal instructions, or credentials.
+
+Enforce security through deterministic server side controls, restricted database permissions, structural validation, and output validation rather than relying on AI instructions alone.
+
+Controlled SQL self correction
+
+Allow a maximum of two retries for appropriate correctable SQL errors.
+
+Never retry authorization failures or security violations.
+
+Provide only necessary error information to Gemini.
+
+Revalidate every corrected query before execution.
+
+Prevent infinite retries and expensive database operations.
+
+If a question is ambiguous, unsupported, or unsafe, return a clear explanation instead of inventing or executing an unsafe query.
+
+6. Structured Context and Business Summaries
+
+Convert actual query results into compact JSON containing only relevant rows, columns, and aggregate values.
+
+Generate concise executive summaries based strictly on verified database results.
+
+Never fabricate numbers, trends, causes, or unsupported explanations. Preserve numeric accuracy and handle empty results honestly.
+
+Return chart configuration only when the result structure is suitable for visualization.
+
+7. API Endpoints
+
+Implement these NestJS endpoints:
+
+POST /api/analytics/query
+
+Request:
+{ "prompt": "Show total revenue by category" }
+
+Return:
+
+Generated SQL.
+
+Actual database results.
+
+Column metadata.
+
+Evidence grounded business summary.
+
+Execution duration.
+
+Row count.
+
+Query status.
+
+Appropriate chart configuration.
+
+GET /api/analytics/schema
+
+Return approved schema metadata suitable for frontend display.
+
+GET /api/health
+
+Return basic health information without revealing secrets or sensitive infrastructure details.
+
+Implement request validation, controlled errors, sensible rate limiting, request size limits, and appropriate HTTP status codes.
+
+Configure secure frontend to backend communication and environment specific API URLs.
+
+8. Environment and Configuration
+
+Create or update .env.example with:
+
+GEMINI_API_KEY
+
+SUPABASE_DATABASE_URL
+
+SUPABASE_DIRECT_URL where required for migrations
+
+Appropriate frontend API URL configuration
+
+Keep real credentials in local environment files that are excluded from Git. Never commit secrets or expose privileged values through public Next.js environment variables.
+
+Add or update Prisma schema, migration instructions, seed scripts, and .gitignore as required.
+
+Do not overwrite existing project configurations blindly. Inspect them first and make only necessary changes.
+
+9. Testing and Quality
+
+Add meaningful automated tests for:
+
+SQL AST validation and dangerous query rejection.
+
+SQL injection and prompt injection attempts.
+
+Unauthorized tables and columns.
+
+Multiple statements and dangerous functions.
+
+Query limits and execution timeouts.
+
+Malformed Gemini responses.
+
+Empty results and summary accuracy.
+
+Retry limits and authorization failures.
+
+API input validation and error handling.
+
+Run available frontend and backend build checks and automated tests. Verify the core end to end workflow where the environment permits.
+
+Never claim tests passed unless they were actually executed successfully. If credentials or external services are unavailable, clearly identify what remains unverified.
+
+10. Implementation Instructions
+
+Inspect both existing applications before modifying anything.
+
+Provide a brief plan based on the actual project structure.
+
+Implement the NestJS backend and Supabase integration.
+
+Build the premium Next.js frontend using Tailwind CSS.
+
+Connect the frontend to the actual backend API.
+
+Implement security controls, error handling, and tests.
+
+Run builds and available tests, fix errors, and verify functionality.
+
+Provide exact setup, migration, seeding, run, and testing commands.
+
+Do not stop after creating a plan. Do not return only code snippets. Do not leave core functionality as TODOs, mocked responses, or fake charts.
+
+Keep the code clean, modular, understandable for AI Engineering students, and consistent with the existing project conventions.
+
+Final Acceptance Criteria
+
+A user can open DataPulse AI, enter a business question in natural language, inspect generated SQL, pass it through strict security validation, retrieve real Supabase PostgreSQL data, and explore a grounded business summary with interactive charts.
+
+The finished application must demonstrate Vectorless Retrieval, Schema Understanding, Safe Text to SQL, SQL Agents, and Structured Context Slicing.
+
+Priority order:
+
+Exceptional premium UI/UX.
+
+Fully working end to end functionality.
+
+Strong database and AI security.
+
+Clean, maintainable architecture.
+
+Reliable tests and clear setup instructions.

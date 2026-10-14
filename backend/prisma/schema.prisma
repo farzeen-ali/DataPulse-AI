@@ -1,0 +1,60 @@
+// DataPulse AI — analytics data model.
+// Migrations run with the owner connection (SUPABASE_DIRECT_URL, see prisma.config.ts).
+// AI-generated SQL runs with the least-privilege role (SUPABASE_DATABASE_URL).
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(120)
+  /// Restricted PII: not granted to the analytics role and blocked by the SQL validator.
+  email     String   @unique @db.VarChar(254)
+  country   String   @db.VarChar(80)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  orders    Order[]
+
+  @@index([country])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model Product {
+  id       Int     @id @default(autoincrement())
+  title    String  @unique @db.VarChar(160)
+  category String  @db.VarChar(80)
+  /// List price in USD. Revenue is computed from orders.amount, not from price.
+  price    Decimal @db.Decimal(10, 2)
+  orders   Order[]
+
+  @@index([category])
+  @@map("products")
+}
+
+/// status is constrained by a CHECK constraint to 'completed' | 'pending' | 'cancelled'
+/// (see the init migration). Plain text keeps AI-generated filters simple.
+model Order {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  productId Int      @map("product_id")
+  /// Amount charged in USD (quantity and discounts applied).
+  amount    Decimal  @db.Decimal(12, 2)
+  status    String   @default("pending") @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([userId])
+  @@index([productId])
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@map("orders")
+}

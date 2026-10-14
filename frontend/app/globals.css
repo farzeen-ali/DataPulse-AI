@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+/*
+ * DataPulse design tokens (Tailwind v4 theme). Everything in the UI is styled
+ * with Tailwind utilities generated from these tokens.
+ */
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Surfaces — deep navy */
+  --color-canvas: #050a16;
+  --color-surface: #0a1222;
+  --color-card: #0c1528;
+  --color-card-2: #101b31;
+  --color-raised: #14213b;
+  --color-line: rgb(148 170 210 / 0.09);
+  --color-line-strong: rgb(148 170 210 / 0.16);
+
+  /* Ink */
+  --color-fg: #e9eefb;
+  --color-fg-2: #a9b6cf;
+  --color-fg-3: #6f7d9b;
+
+  /* Accent — elegant blue */
+  --color-accent: #4c8dff;
+  --color-accent-strong: #2f74f0;
+  --color-accent-soft: rgb(76 141 255 / 0.12);
+  --color-cyan: #5ad1e6;
+
+  /* Status (always paired with an icon + label) */
+  --color-good: #2fbf71;
+  --color-warn: #f2b33d;
+  --color-bad: #f06363;
+
+  /* Chart categorical slots (validated on the navy card surface) */
+  --color-series-1: #3987e5;
+  --color-series-2: #d95926;
+  --color-series-3: #199e70;
+  --color-series-4: #c98500;
+  --color-series-5: #d55181;
+  --color-series-6: #008300;
+  --color-series-7: #9085e9;
+  --color-series-8: #e66767;
+
+  --shadow-card: 0 1px 0 0 rgb(255 255 255 / 0.03) inset, 0 20px 40px -24px rgb(0 0 0 / 0.6);
+  --shadow-glow: 0 0 0 1px rgb(76 141 255 / 0.35), 0 8px 32px -8px rgb(47 116 240 / 0.45);
+
+  --animate-shimmer: shimmer 1.8s linear infinite;
+  --animate-pulse-dot: pulse-dot 1.6s ease-in-out infinite;
+
+  @keyframes shimmer {
+    from { background-position: -400px 0; }
+    to { background-position: 400px 0; }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.82); }
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-canvas text-fg font-sans antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+  ::selection {
+    @apply bg-accent/30 text-fg;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(148 170 210 / 0.18) transparent;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
